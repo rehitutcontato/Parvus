@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans"
 import "./globals.css"
 import { cn } from "@/lib/utils"
 import { CustomCursor } from "@/components/ui/CustomCursor"
+import { Noise } from "@/components/ui/Noise"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
       className={cn(GeistSans.variable, inter.variable)}
     >
       <body className={cn(inter.className, "antialiased")}>
+        <Noise />
         <CustomCursor />
         {children}
       </body>
