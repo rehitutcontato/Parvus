@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import AnimatedPath from "@/components/ui/spinning-sphere"
+import { ShaderAnimation } from "@/components/ui/shader-lines"
 import { EntropyFill } from "@/components/ui/entropy-fill"
 import { ParvusButton } from "@/components/ui/ParvusButton"
 
@@ -83,18 +83,20 @@ export function Hero() {
         </div>
       </div>
 
-      <div
-        className="pointer-events-none absolute right-0 top-1/2 hidden w-[45%] min-w-[280px] max-w-[520px] -translate-y-1/2 select-none lg:block"
-        style={{ opacity: 0.55 }}
-      >
-        <AnimatedPath width={500} height={600} stroke="#F5F5F5" dur="10s" />
+      {/* Shader Lines — decorativo direita, z-0 */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <div
+          className="absolute inset-0"
+          style={{
+            maskImage: "linear-gradient(to right, transparent 35%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.6) 85%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to right, transparent 35%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.6) 85%, transparent 100%)",
+            opacity: 0.45,
+          }}
+        >
+          <ShaderAnimation />
+        </div>
       </div>
 
-      <div
-        className="pointer-events-none absolute -right-16 top-24 w-[85%] max-w-[420px] opacity-45 select-none lg:hidden"
-      >
-        <AnimatedPath width={400} height={480} stroke="#F5F5F5" dur="10s" />
-      </div>
     </section>
   )
 }
