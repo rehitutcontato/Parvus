@@ -2,34 +2,57 @@
 
 import { motion } from "@/components/framer/motion-elements"
 import Link from "next/link"
-import { Entropy } from "@/components/ui/entropy"
-import { EntropyFill } from "@/components/ui/entropy-fill"
+import { EpicHeroBackground } from "@/components/ui/epic-hero-background"
 import { ParvusButton } from "@/components/ui/ParvusButton"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: EASE, delay },
-})
-
 export function Hero() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden px-5 pb-16 pt-28 md:px-8 lg:px-12">
-      <EntropyFill className="opacity-[0.15]" />
 
+      {/* ═══════════════════════════════════════
+          CAMADA 1 — Background interativo com fumaça/partículas
+          z-index: 0 — fica atrás de tudo
+      ═══════════════════════════════════════ */}
+      <EpicHeroBackground
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{ zIndex: 0 }}
+      />
+
+      {/* ═══════════════════════════════════════
+          CAMADA 2 — Gradiente escurece a esquerda
+          Garante legibilidade do texto
+      ═══════════════════════════════════════ */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: "linear-gradient(to right, rgba(8,8,8,1) 0%, rgba(8,8,8,0.85) 40%, rgba(8,8,8,0.4) 70%, rgba(8,8,8,0.1) 100%)",
+          zIndex: 1,
+        }}
+      />
+
+      {/* ═══════════════════════════════════════
+          CAMADA 3 — Conteúdo do Hero
+          z-index: 10 — acima de tudo
+      ═══════════════════════════════════════ */}
       <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="max-w-[580px]">
           <motion.span
-            {...fadeUp(0.1)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
             className="mb-6 block text-[11px] font-medium uppercase tracking-[0.15em] text-[#888888]"
           >
             Agência de Landing Pages
           </motion.span>
 
           <motion.h1
-            {...fadeUp(0.3)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
             className="font-geist font-bold leading-[1] text-[#F5F5F5]"
             style={{ fontSize: "clamp(52px, 6.5vw, 88px)" }}
           >
@@ -41,7 +64,9 @@ export function Hero() {
           </motion.h1>
 
           <motion.p
-            {...fadeUp(0.7)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.7 }}
             className="font-inter mt-6 max-w-[460px] text-[18px] leading-[1.6] text-[#888888]"
           >
             Construímos landing pages que transformam visitantes em clientes reais.
@@ -49,7 +74,9 @@ export function Hero() {
           </motion.p>
 
           <motion.div
-            {...fadeUp(0.9)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.9 }}
             className="mb-16 mt-10 flex flex-wrap items-center gap-6"
           >
             <ParvusButton
@@ -69,7 +96,9 @@ export function Hero() {
           </motion.div>
 
           <motion.div
-            {...fadeUp(1.1)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 1.1 }}
             className="flex items-center gap-2"
           >
             <span className="relative flex h-2 w-2">
@@ -82,32 +111,6 @@ export function Hero() {
           </motion.div>
         </div>
       </div>
-
-      {/* Entropy — elemento decorativo direita, desktop only */}
-      <div
-        className="hidden lg:block absolute right-0 top-0 h-full pointer-events-none"
-        style={{ width: "52%", zIndex: 0 }}
-      >
-        {/* Máscara gradiente: funde com o fundo nas bordas */}
-        <div
-          className="absolute inset-0"
-          style={{
-            maskImage: `
-              linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
-            `,
-            WebkitMaskImage: `
-              linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
-            `,
-            maskComposite: "intersect",
-            WebkitMaskComposite: "destination-in",
-          }}
-        >
-          <Entropy className="w-full h-full" />
-        </div>
-      </div>
-
     </section>
   )
 }

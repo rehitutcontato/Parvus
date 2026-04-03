@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, AnimatePresence, useScroll, useTransform, useSpring, useInView } from "framer-motion"
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useInView, useMotionValue } from "framer-motion"
 import type { HTMLMotionProps, MotionProps } from "framer-motion"
 
 // Exportar motion components tipados
@@ -21,7 +21,7 @@ export const MotionButton = motion.button
 export const MotionA = motion.a
 
 // Exportar hooks como named exports
-export { useScroll, useTransform, useSpring, useInView }
+export { useScroll, useTransform, useSpring, useInView, useMotionValue }
 
 // Exportar componentes utilitários
 export { AnimatePresence }

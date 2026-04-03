@@ -2,7 +2,13 @@
 
 import Link from "next/link"
 import { motion } from "@/components/framer/motion-elements"
+import { Inter } from "next/font/google"
 import { EMAIL, INSTAGRAM_URL, whatsappHref } from "@/lib/site"
+
+const interThin = Inter({
+  subsets: ["latin"],
+  weight: "100",
+})
 
 const links = [
   { href: "#sobre", label: "Sobre" },
@@ -31,7 +37,7 @@ export function Footer() {
         >
           {/* Logo */}
           <div className="text-center md:text-left">
-            <p className="font-geist text-lg font-bold text-[#F5F5F5]">Parvus</p>
+            <p className={`${interThin.className} text-lg tracking-[0.3em] text-[#F5F5F5]`}>P A R V U S</p>
             <p className="mt-1 text-sm text-[#555]">Landing pages que convertem</p>
           </div>
 

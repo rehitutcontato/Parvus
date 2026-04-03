@@ -3,8 +3,14 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "@/components/framer/motion-elements"
+import { Inter } from "next/font/google"
 import { whatsappHref } from "@/lib/site"
 import { cn } from "@/lib/utils"
+
+const interThin = Inter({
+  subsets: ["latin"],
+  weight: "100",
+})
 
 const navCtaClassName =
   "inline-flex items-center justify-center rounded border border-[#333333] bg-transparent px-4 py-2 text-sm text-[#F5F5F5] transition-all duration-200 hover:border-[#888888] hover:bg-[#141414] hover:text-white"
@@ -48,10 +54,10 @@ export function Navbar() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 md:px-8">
           <Link
             href="#"
-            className="font-geist text-xl font-bold text-[#F5F5F5]"
+            className={`${interThin.className} text-xl tracking-[0.3em] text-[#F5F5F5]`}
             data-hover
           >
-            Parvus
+            P A R V U S
           </Link>
 
           <nav className="hidden items-center gap-10 md:flex">
@@ -115,7 +121,25 @@ export function Navbar() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
           >
-            <nav className="flex flex-1 flex-col items-center justify-center gap-8 px-6 pt-24">
+            {/* Header do menu mobile com botão de fechar */}
+            <div className="flex items-center justify-between px-5 py-4">
+              <span className={`${interThin.className} text-xl tracking-[0.3em] text-[#F5F5F5]`}>
+                P A R V U S
+              </span>
+              <button
+                type="button"
+                className="flex h-10 w-10 flex-col items-center justify-center gap-1.5"
+                aria-label="Fechar menu"
+                onClick={() => setOpen(false)}
+                data-hover
+              >
+                <span className="h-0.5 w-6 translate-y-2 rotate-45 bg-[#F5F5F5] transition-transform" />
+                <span className="h-0.5 w-6 bg-[#F5F5F5] opacity-0 transition-opacity" />
+                <span className="h-0.5 w-6 -translate-y-2 -rotate-45 bg-[#F5F5F5] transition-transform" />
+              </button>
+            </div>
+
+            <nav className="flex flex-1 flex-col items-center justify-center gap-8 px-6">
               {links.map((l, i) => (
                 <motion.div
                   key={l.href}

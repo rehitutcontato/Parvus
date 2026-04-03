@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef } from "react"
-import { motion, useScroll, useSpring, useTransform } from "@/components/framer/motion-elements"
+import { motion, useScroll, useSpring, useTransform, useInView } from "@/components/framer/motion-elements"
 import { Overline } from "@/components/ui/Overline"
 
 const steps = [
@@ -31,6 +31,7 @@ const steps = [
   },
 ]
 
+// Desktop card component
 function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
   return (
     <motion.div
@@ -65,6 +66,83 @@ function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
         <p className="text-sm leading-relaxed text-[#888888]">
           {step.body}
         </p>
+      </div>
+    </motion.div>
+  )
+}
+
+// Mobile timeline item
+function TimelineItem({ 
+  step, 
+  index, 
+  progress 
+}: { 
+  step: typeof steps[0]; 
+  index: number;
+  progress: ReturnType<typeof useSpring>;
+}) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-30%" })
+  
+  const itemProgress = useTransform(
+    progress,
+    [index / steps.length, (index + 1) / steps.length],
+    [0, 1]
+  )
+  
+  const lineHeight = useSpring(itemProgress, { stiffness: 100, damping: 30 })
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex gap-4"
+    >
+      {/* Timeline line and dot */}
+      <div className="relative flex flex-col items-center">
+        {/* Top connecting line */}
+        {index > 0 && (
+          <motion.div 
+            className="absolute bottom-1/2 w-px bg-[#333] origin-bottom"
+            style={{ 
+              height: 40,
+              scaleY: lineHeight,
+            }}
+          />
+        )}
+        
+        {/* Number circle */}
+        <motion.div 
+          className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-[#1E1E1E] bg-[#0a0a0a]"
+          animate={isInView ? { borderColor: "#333", backgroundColor: "#111" } : {}}
+          transition={{ duration: 0.3 }}
+        >
+          <span className="font-geist text-xs font-semibold text-[#888]">
+            {step.num}
+          </span>
+        </motion.div>
+        
+        {/* Bottom connecting line */}
+        {index < steps.length - 1 && (
+          <div className="mt-2 h-24 w-px bg-[#1E1E1E]" />
+        )}
+      </div>
+
+      {/* Content card */}
+      <div className="flex-1 pb-8">
+        <div className="space-y-2">
+          <span className="text-[10px] uppercase tracking-widest text-[#555]">
+            {step.when}
+          </span>
+          <h3 className="font-geist text-base font-semibold text-[#F5F5F5]">
+            {step.title}
+          </h3>
+          <p className="text-sm leading-relaxed text-[#888888]">
+            {step.body}
+          </p>
+        </div>
       </div>
     </motion.div>
   )
@@ -106,10 +184,17 @@ export function Processo() {
           </p>
         </motion.div>
 
-        {/* Steps Grid */}
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        {/* Steps Grid - Desktop */}
+        <div className="hidden lg:grid lg:grid-cols-4 lg:gap-8">
           {steps.map((step, index) => (
             <StepCard key={step.num} step={step} index={index} />
+          ))}
+        </div>
+
+        {/* Mobile Timeline */}
+        <div className="lg:hidden">
+          {steps.map((step, index) => (
+            <TimelineItem key={step.num} step={step} index={index} progress={lineWidth} />
           ))}
         </div>
 

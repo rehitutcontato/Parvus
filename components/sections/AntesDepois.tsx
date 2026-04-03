@@ -1,57 +1,246 @@
 "use client"
 
-import { motion, useInView } from "@/components/framer/motion-elements"
+import { useState } from "react"
+import { motion, useInView, AnimatePresence } from "@/components/framer/motion-elements"
 import Image from "next/image"
 import Link from "next/link"
 import { useRef } from "react"
 import { whatsappHref } from "@/lib/site"
+import { cn } from "@/lib/utils"
 
-const projects = [
+interface Project {
+  id: number
+  client: string
+  category: string
+  location: string
+  before: {
+    image: string
+    label: string
+    pain: string
+    metrics: { label: string; value: string; negative?: boolean }[]
+  }
+  after: {
+    image: string
+    label: string
+    gain: string
+    metrics: { label: string; value: string; highlight?: boolean }[]
+  }
+  testimonial?: {
+    quote: string
+    author: string
+    role: string
+  }
+  timeline: string
+  investment: string
+}
+
+const projects: Project[] = [
   {
     id: 1,
     client: "Clínica Estética",
+    category: "Saúde & Bem-estar",
+    location: "São Paulo, SP",
+    timeline: "14 dias",
+    investment: "R$ 4.200",
     before: {
       image: "/images/antes-depois/clinica-antes.jpg",
-      label: "Site genérico",
-      pain: "Home confusa, 12s de carregamento",
+      label: "Site genérico Wix",
+      pain: "Template genérico, carregamento lento, zero SEO",
+      metrics: [
+        { label: "Carregamento", value: "12s", negative: true },
+        { label: "Agendamentos/mês", value: "8", negative: true },
+        { label: "Taxa de rejeição", value: "78%", negative: true },
+      ],
     },
     after: {
       image: "/images/antes-depois/clinica-depois.jpg",
-      label: "Pós-Parvus",
-      gain: "Agendamentos +340% no primeiro mês",
+      label: "Landing Page Otimizada",
+      gain: "Sistema de agendamento integrado + SEO local dominante",
+      metrics: [
+        { label: "Carregamento", value: "1.8s", highlight: true },
+        { label: "Agendamentos/mês", value: "127", highlight: true },
+        { label: "Taxa de rejeição", value: "32%", highlight: true },
+      ],
+    },
+    testimonial: {
+      quote: "Em 30 dias tive que contratar mais uma esteticista. O site virou nossa melhor vendedora.",
+      author: "Dra. Marina Costa",
+      role: "Proprietária",
     },
   },
   {
     id: 2,
     client: "Escritório de Arquitetura",
+    category: "Arquitetura & Design",
+    location: "Campinas, SP",
+    timeline: "18 dias",
+    investment: "R$ 5.800",
     before: {
       image: "/images/antes-depois/arquiteto-antes.jpg",
       label: "Template comprado",
-      pain: "Zero leads em 6 meses",
+      pain: "Design genérico, sem diferenciação, formulários que não funcionam",
+      metrics: [
+        { label: "Leads/mês", value: "0", negative: true },
+        { label: "Orçamentos", value: "2/mês", negative: true },
+        { label: "Tempo no site", value: "45s", negative: true },
+      ],
     },
     after: {
       image: "/images/antes-depois/arquiteto-depois.jpg",
-      label: "Pós-Parvus",
-      gain: "15 orçamentos/mês consistentes",
+      label: "Portfólio Interativo",
+      gain: "Galeria imersiva + formulário inteligente + automação de WhatsApp",
+      metrics: [
+        { label: "Leads/mês", value: "34", highlight: true },
+        { label: "Orçamentos", value: "15/mês", highlight: true },
+        { label: "Tempo no site", value: "4m 12s", highlight: true },
+      ],
+    },
+    testimonial: {
+      quote: "Conseguimos triplicar o faturamento em 4 meses. Cada projeto do site é um cliente que fecha.",
+      author: "Carlos Mendes",
+      role: "Arquiteto Fundador",
     },
   },
   {
     id: 3,
     client: "Consultório Odontológico",
+    category: "Odontologia",
+    location: "Americana, SP",
+    timeline: "12 dias",
+    investment: "R$ 3.600",
     before: {
       image: "/images/antes-depois/dentista-antes.jpg",
       label: "Wix/Site pronto",
-      pain: "Não aparecia no Google",
+      pain: "Invisível no Google, sem integração, layout desatualizado",
+      metrics: [
+        { label: "Ranking Google", value: "Página 3+", negative: true },
+        { label: "Ligações/mês", value: "12", negative: true },
+        { label: "Avaliações", value: "8", negative: true },
+      ],
     },
     after: {
       image: "/images/antes-depois/dentista-depois.jpg",
-      label: "Pós-Parvus",
-      gain: "1º no Google Maps, +200% ligações",
+      label: "Site Profissional",
+      gain: "1º lugar no Maps, integração com Google Business, agendamento online",
+      metrics: [
+        { label: "Ranking Google", value: "1º lugar", highlight: true },
+        { label: "Ligações/mês", value: "89", highlight: true },
+        { label: "Avaliações", value: "127", highlight: true },
+      ],
+    },
+    testimonial: {
+      quote: "Pacientes dizem que nos acharam no Google e 'o site passou confiança'. Isso é ouro.",
+      author: "Dra. Fernanda Lima",
+      role: "Dentista Proprietária",
     },
   },
 ]
 
-function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
+function MetricBadge({ label, value, negative, highlight }: { label: string; value: string; negative?: boolean; highlight?: boolean }) {
+  return (
+    <div className="flex flex-col">
+      <span className="text-[10px] uppercase tracking-wider text-[#666]">{label}</span>
+      <span className={cn(
+        "text-sm font-semibold",
+        negative && "text-red-400",
+        highlight && "text-green-400",
+        !negative && !highlight && "text-[#888]"
+      )}>
+        {value}
+      </span>
+    </div>
+  )
+}
+
+function ComparisonSlider({ project, isActive }: { project: Project; isActive: boolean }) {
+  const [showAfter, setShowAfter] = useState(false)
+  
+  return (
+    <div className="relative mb-6 overflow-hidden rounded-xl border border-[#1E1E1E] bg-[#0a0a0a]">
+      {/* Tabs */}
+      <div className="flex border-b border-[#1E1E1E]">
+        <button
+          onClick={() => setShowAfter(false)}
+          className={cn(
+            "flex-1 px-4 py-3 text-xs font-medium uppercase tracking-wider transition-all",
+            !showAfter ? "bg-red-500/10 text-red-400" : "text-[#555] hover:text-[#888]"
+          )}
+        >
+          Antes
+        </button>
+        <button
+          onClick={() => setShowAfter(true)}
+          className={cn(
+            "flex-1 px-4 py-3 text-xs font-medium uppercase tracking-wider transition-all",
+            showAfter ? "bg-green-500/10 text-green-400" : "text-[#555] hover:text-[#888]"
+          )}
+        >
+          Depois
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="relative aspect-[4/3]">
+        <AnimatePresence mode="wait">
+          {!showAfter ? (
+            <motion.div
+              key="before"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-[#141414]"
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <span className="mb-2 block text-[10px] uppercase tracking-widest text-[#333]">
+                    {project.before.label}
+                  </span>
+                  <span className="text-[#555]">{project.before.pain}</span>
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="after"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-[#0a0a0a]"
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center px-4">
+                  <span className="mb-2 block text-[10px] uppercase tracking-widest text-green-500/50">
+                    {project.after.label}
+                  </span>
+                  <span className="text-green-400">{project.after.gain}</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Metrics */}
+      <div className="grid grid-cols-3 gap-2 border-t border-[#1E1E1E] p-3">
+        {!showAfter ? (
+          project.before.metrics.map((m, i) => (
+            <MetricBadge key={i} {...m} />
+          ))
+        ) : (
+          project.after.metrics.map((m, i) => (
+            <MetricBadge key={i} {...m} />
+          ))
+        )}
+      </div>
+    </div>
+  )
+}
+
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const [isHovered, setIsHovered] = useState(false)
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -63,51 +252,50 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         ease: [0.16, 1, 0.3, 1],
       }}
       className="group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Container das imagens */}
-      <div className="relative mb-4 overflow-hidden rounded-lg border border-[#1E1E1E] bg-[#0a0a0a]">
-        <div className="grid grid-cols-2">
-          {/* Antes */}
-          <div className="relative aspect-[4/3] overflow-hidden border-r border-[#1E1E1E]">
-            <div className="absolute inset-0 bg-[#141414]" />
-            {/* Placeholder até ter imagens reais */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-[11px] uppercase tracking-widest text-[#333]">
-                Antes
-              </span>
-            </div>
-            <div className="absolute left-2 top-2 rounded bg-red-500/20 px-2 py-0.5">
-              <span className="text-[10px] font-medium text-red-400">ANTES</span>
-            </div>
-          </div>
-
-          {/* Depois */}
-          <div className="relative aspect-[4/3] overflow-hidden">
-            <div className="absolute inset-0 bg-[#0f0f0f]" />
-            {/* Placeholder até ter imagens reais */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-[11px] uppercase tracking-widest text-[#444]">
-                Depois
-              </span>
-            </div>
-            <div className="absolute left-2 top-2 rounded bg-green-500/20 px-2 py-0.5">
-              <span className="text-[10px] font-medium text-green-400">DEPOIS</span>
-            </div>
-          </div>
-        </div>
+      {/* Category & Location */}
+      <div className="mb-3 flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-wider text-[#555]">
+          {project.category}
+        </span>
+        <span className="text-[10px] text-[#333]">{project.location}</span>
       </div>
 
-      {/* Info */}
-      <div className="space-y-2">
-        <h3 className="font-geist text-base font-medium text-[#F5F5F5]">
-          {project.client}
-        </h3>
-        <div className="flex items-center gap-3 text-[12px]">
-          <span className="text-[#555]">{project.before.pain}</span>
-          <span className="text-[#333]">→</span>
-          <span className="text-green-400">{project.after.gain}</span>
-        </div>
+      {/* Comparison Slider */}
+      <ComparisonSlider project={project} isActive={isHovered} />
+
+      {/* Client Name */}
+      <h3 className="mb-2 font-geist text-lg font-semibold text-[#F5F5F5]">
+        {project.client}
+      </h3>
+
+      {/* Project Meta */}
+      <div className="mb-4 flex items-center gap-4 text-[11px] text-[#555]">
+        <span>⏱ {project.timeline}</span>
+        <span>💰 {project.investment}</span>
       </div>
+
+      {/* Testimonial */}
+      {project.testimonial && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: isHovered ? 1 : 0.7, height: "auto" }}
+          className="rounded-lg border border-[#1E1E1E] bg-[#0a0a0a] p-4"
+        >
+          <p className="mb-3 text-sm italic text-[#888] leading-relaxed">
+            &ldquo;{project.testimonial.quote}&rdquo;
+          </p>
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-[#1E1E1E]" />
+            <div>
+              <p className="text-xs font-medium text-[#F5F5F5]">{project.testimonial.author}</p>
+              <p className="text-[10px] text-[#555]">{project.testimonial.role}</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   )
 }

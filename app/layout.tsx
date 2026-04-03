@@ -8,6 +8,7 @@ import { Noise } from "@/components/ui/Noise"
 
 const inter = Inter({
   subsets: ["latin"],
+  weight: ["100", "400", "500", "600", "700"],
   variable: "--font-inter",
 })
 
