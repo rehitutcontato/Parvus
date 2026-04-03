@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion, useMotionValue, useSpring, useTransform } from "@/components/framer/motion-elements"
+import { cn } from "@/lib/utils"
 
 // Efeito de texto decodificando
 function DecodingText({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
@@ -47,7 +48,13 @@ function DecodingText({ text, className, delay = 0 }: { text: string; className?
   )
 }
 
-export function EpicHeroBackground() {
+interface EpicHeroBackgroundProps {
+  className?: string
+  style?: React.CSSProperties
+  "aria-hidden"?: boolean | "true" | "false"
+}
+
+export function EpicHeroBackground({ className, style, "aria-hidden": ariaHidden }: EpicHeroBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const mouseRef = useRef({ x: 0, y: 0, vx: 0, vy: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
@@ -96,8 +103,8 @@ export function EpicHeroBackground() {
       connections: number
 
       constructor(x?: number, y?: number) {
-        this.x = x ?? Math.random() * canvas.width
-        this.y = y ?? Math.random() * canvas.height
+        this.x = x ?? Math.random() * canvas!.width
+        this.y = y ?? Math.random() * canvas!.height
         this.baseX = this.x
         this.baseY = this.y
         this.size = Math.random() * 1.5 + 0.5
@@ -135,8 +142,8 @@ export function EpicHeroBackground() {
         }
         
         // Bounce nas bordas
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1
+        if (this.x < 0 || this.x > canvas!.width) this.speedX *= -1
+        if (this.y < 0 || this.y > canvas!.height) this.speedY *= -1
         
         return pulse
       }
@@ -173,8 +180,8 @@ export function EpicHeroBackground() {
       
       for (let i = 0; i < numParticles; i++) {
         // Distribuir em grade com variação aleatória
-        const gridX = (i % 10) / 10 * canvas.width * 0.8 + canvas.width * 0.1
-        const gridY = Math.floor(i / 10) / 8 * canvas.height * 0.8 + canvas.height * 0.1
+        const gridX = (i % 10) / 10 * canvas!.width * 0.8 + canvas!.width * 0.1
+        const gridY = Math.floor(i / 10) / 8 * canvas!.height * 0.8 + canvas!.height * 0.1
         const offsetX = (Math.random() - 0.5) * 100
         const offsetY = (Math.random() - 0.5) * 100
         
@@ -212,7 +219,7 @@ export function EpicHeroBackground() {
 
     const animate = () => {
       ctx.fillStyle = "rgba(8, 8, 8, 0.1)"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillRect(0, 0, canvas!.width, canvas!.height)
       
       time += 0.01
       
@@ -226,8 +233,8 @@ export function EpicHeroBackground() {
       })
       
       // Efeito de ondulação no centro
-      const centerX = canvas.width * 0.7
-      const centerY = canvas.height * 0.5
+      const centerX = canvas!.width * 0.7
+      const centerY = canvas!.height * 0.5
       const waveRadius = 100 + Math.sin(time) * 20
       
       const waveGradient = ctx.createRadialGradient(
@@ -249,7 +256,7 @@ export function EpicHeroBackground() {
     animate()
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect()
+      const rect = canvas!.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
       
@@ -272,7 +279,7 @@ export function EpicHeroBackground() {
   }, [mouseX, mouseY])
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className={cn("absolute inset-0 overflow-hidden", className)} style={style} aria-hidden={ariaHidden}>
       {/* Canvas com constelação */}
       <canvas
         ref={canvasRef}

@@ -36,8 +36,8 @@ export function HeroSmokeBackground() {
       maxLife: number
 
       constructor() {
-        this.x = Math.random() * canvas.width
-        this.y = canvas.height + Math.random() * 100
+        this.x = Math.random() * canvas!.width
+       this.y = canvas!.height + Math.random() * 100
         this.size = Math.random() * 2 + 0.5
         this.speedX = (Math.random() - 0.5) * 0.5
         this.speedY = -(Math.random() * 0.5 + 0.2)
@@ -65,8 +65,8 @@ export function HeroSmokeBackground() {
 
         // Reset quando sai da tela ou morre
         if (this.y < -50 || this.life > this.maxLife) {
-          this.x = Math.random() * canvas.width
-          this.y = canvas.height + Math.random() * 100
+          this.x = Math.random() * canvas!.width
+          this.y = canvas!.height + Math.random() * 100
           this.life = 0
           this.opacity = Math.random() * 0.3 + 0.1
         }
@@ -94,22 +94,22 @@ export function HeroSmokeBackground() {
     // Criar partículas iniciais
     for (let i = 0; i < 150; i++) {
       const p = new Particle()
-      p.y = Math.random() * canvas.height
+      p.y = Math.random() * canvas!.height
       particles.push(p)
     }
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, canvas!.width, canvas!.height)
 
       // Desenhar gradiente de fundo suave
       const gradient = ctx.createRadialGradient(
-        canvas.width * 0.7, canvas.height * 0.5, 0,
-        canvas.width * 0.7, canvas.height * 0.5, canvas.width * 0.6
+        canvas!.width * 0.7, canvas!.height * 0.5, 0,
+        canvas!.width * 0.7, canvas!.height * 0.5, canvas!.width * 0.6
       )
       gradient.addColorStop(0, "rgba(30, 30, 30, 0.3)")
       gradient.addColorStop(1, "rgba(8, 8, 8, 0)")
       ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillRect(0, 0, canvas!.width, canvas!.height)
 
       // Atualizar e desenhar partículas
       particles.forEach(p => {
