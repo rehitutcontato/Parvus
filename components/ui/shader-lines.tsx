@@ -4,17 +4,17 @@ import { useEffect, useRef } from "react"
 
 declare global {
   interface Window {
-    THREE: any
+    THREE: typeof import("three")
   }
 }
 
 export function ShaderAnimation() {
   const containerRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<{
-    camera: any
-    scene: any
-    renderer: any
-    uniforms: any
+    camera: THREE.Camera | null
+    scene: THREE.Scene | null
+    renderer: THREE.WebGLRenderer | null
+    uniforms: Record<string, { type: string; value: unknown }> | null
     animationId: number | null
   }>({
     camera: null,
