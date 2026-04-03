@@ -1,8 +1,8 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion } from "@/components/framer/motion-elements"
 import Link from "next/link"
-import { ShaderAnimation } from "@/components/ui/shader-lines"
+import { Entropy } from "@/components/ui/entropy"
 import { EntropyFill } from "@/components/ui/entropy-fill"
 import { ParvusButton } from "@/components/ui/ParvusButton"
 
@@ -83,17 +83,28 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Shader Lines — decorativo direita, z-0 */}
-      <div className="hidden lg:block absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+      {/* Entropy — elemento decorativo direita, desktop only */}
+      <div
+        className="hidden lg:block absolute right-0 top-0 h-full pointer-events-none"
+        style={{ width: "52%", zIndex: 0 }}
+      >
+        {/* Máscara gradiente: funde com o fundo nas bordas */}
         <div
           className="absolute inset-0"
           style={{
-            maskImage: "linear-gradient(to right, transparent 35%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.6) 85%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to right, transparent 35%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.6) 85%, transparent 100%)",
-            opacity: 0.45,
+            maskImage: `
+              linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
+            `,
+            WebkitMaskImage: `
+              linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%),
+              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
+            `,
+            maskComposite: "intersect",
+            WebkitMaskComposite: "destination-in",
           }}
         >
-          <ShaderAnimation />
+          <Entropy className="w-full h-full" />
         </div>
       </div>
 

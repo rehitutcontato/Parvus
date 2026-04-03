@@ -1,127 +1,173 @@
 "use client"
 
-import { useRef } from "react"
-import { motion } from "framer-motion"
+import { motion } from "@/components/framer/motion-elements"
 import { Overline } from "@/components/ui/Overline"
-import { ParvusBadge } from "@/components/ui/ParvusBadge"
 import { ParvusButton } from "@/components/ui/ParvusButton"
 import { whatsappHref } from "@/lib/site"
 
+const services = [
+  {
+    badge: "Setup único",
+    title: "Landing Page Premium",
+    price: "A partir de R$ 6.000",
+    description: `Do zero ao ar. Pesquisa do negócio, arquitetura de conversão, design de alto impacto, desenvolvimento em código limpo, deploy em produção. Otimizado para Google Maps, bio do Instagram e qualquer canal onde seu cliente te encontra.`,
+    features: [
+      "Análise completa do negócio",
+      "Design system exclusivo",
+      "Código próprio (sem construtores)",
+      "Domínio e hospedagem configurados",
+      "Analytics instalado",
+      "Treinamento de uso",
+    ],
+    cta: "Solicitar proposta",
+    highlighted: true,
+  },
+  {
+    badge: "Recorrente",
+    title: "Manutenção Mensal",
+    price: "R$ 500/mês",
+    description: `Seu site precisa evoluir junto com seu negócio. A manutenção garante que o instrumento continue funcionando no pico.`,
+    features: [
+      "Atualizações de conteúdo",
+      "Monitoramento de performance",
+      "Relatório mensal de métricas",
+      "Suporte via WhatsApp",
+      "Banners para redes sociais",
+      "Backups semanais",
+    ],
+    cta: null,
+    highlighted: false,
+  },
+  {
+    badge: "Incluso em todos",
+    title: "Identidade Digital",
+    price: "Sem custo adicional",
+    description: `Presença coerente em todos os canais. O site é o centro — mas o Google Maps, o Instagram e o WhatsApp Business precisam reforçar a mesma mensagem.`,
+    features: [
+      "Otimização no Google Maps",
+      "Bio do Instagram configurada",
+      "Padronização visual dos canais",
+      "WhatsApp Business ativo",
+    ],
+    cta: null,
+    highlighted: false,
+  },
+]
+
 function ServiceCard({
-  children,
+  service,
   index,
 }: {
-  children: React.ReactNode
+  service: typeof services[0]
   index: number
 }) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = ref.current
-    if (!el) return
-    const r = el.getBoundingClientRect()
-    el.style.setProperty("--sx", `${e.clientX - r.left}px`)
-    el.style.setProperty("--sy", `${e.clientY - r.top}px`)
-  }
-
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.08 }}
-      onMouseMove={onMove}
-      className="group relative overflow-hidden rounded-xl border border-[#1E1E1E] bg-[#141414] p-8 transition-[border-color,box-shadow] duration-300 hover:border-[#333333] hover:shadow-[0_0_40px_rgba(255,255,255,0.03)]"
-      style={{
-        backgroundImage: `radial-gradient(500px circle at var(--sx, 50%) var(--sy, 50%), rgba(255,255,255,0.05), transparent 45%)`,
-      }}
+      transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative ${service.highlighted ? "lg:-mt-4 lg:mb-4" : ""}`}
     >
-      {children}
+      <div
+        className={`h-full rounded-lg border p-6 transition-all duration-300 md:p-8 ${
+          service.highlighted
+            ? "border-[#333] bg-[#0f0f0f]"
+            : "border-[#1E1E1E] bg-transparent hover:border-[#333]"
+        }`}
+      >
+        {/* Badge */}
+        <span
+          className={`mb-4 inline-block text-[11px] uppercase tracking-widest ${
+            service.highlighted ? "text-[#F5F5F5]" : "text-[#555]"
+          }`}
+        >
+          {service.badge}
+        </span>
+
+        {/* Title */}
+        <h3 className="font-geist text-lg font-semibold text-[#F5F5F5] md:text-xl">
+          {service.title}
+        </h3>
+
+        {/* Price */}
+        <p
+          className={`mt-3 font-geist text-2xl font-bold md:text-3xl ${
+            service.highlighted ? "text-[#F5F5F5]" : "text-[#888]"
+          }`}
+        >
+          {service.price}
+        </p>
+
+        {/* Description */}
+        <p className="mt-4 text-sm leading-relaxed text-[#888]">
+          {service.description}
+        </p>
+
+        {/* Features */}
+        <ul className="mt-6 space-y-2">
+          {service.features.map((feature) => (
+            <li key={feature} className="flex items-start gap-2 text-sm text-[#888]">
+              <span className="mt-1 text-[#555]">—</span>
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* CTA */}
+        {service.cta && (
+          <div className="mt-8">
+            <ParvusButton href={whatsappHref(service.cta)} variant="primary">
+              {service.cta}
+            </ParvusButton>
+          </div>
+        )}
+      </div>
     </motion.div>
   )
 }
 
-const listClass = "mt-6 space-y-3 text-sm text-[#888888]"
-
 export function Servicos() {
   return (
-    <section id="servicos" className="scroll-mt-24 px-5 py-24 md:px-8">
+    <section id="servicos" className="scroll-mt-24 px-5 py-24 md:px-8 lg:py-32">
       <div className="mx-auto max-w-6xl">
-        <Overline>Serviços</Overline>
-        <h2 className="mt-3 font-geist text-[clamp(32px,4vw,48px)] font-bold text-[#F5F5F5]">
-          Uma oferta. Três camadas.
-        </h2>
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16 max-w-2xl"
+        >
+          <Overline>Serviços</Overline>
+          <h2 className="mt-3 font-geist text-[clamp(32px,4vw,48px)] font-bold leading-tight text-[#F5F5F5]">
+            Uma oferta. Três camadas.
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-[#888]">
+            Cada camada pode ser contratada separadamente. Ou você pode ter todas — 
+            a Landing Page como núcleo, a Manutenção como evolução contínua, e a 
+            Identidade Digital como alinhamento de todos os canais.
+          </p>
+        </motion.div>
 
-        <div className="mt-14 grid gap-8 lg:grid-cols-3">
-          <ServiceCard index={0}>
-            <ParvusBadge className="mb-4">Setup único</ParvusBadge>
-            <h3 className="font-geist text-xl font-semibold text-[#F5F5F5]">
-              Landing Page Premium
-            </h3>
-            <p className="mt-4 font-geist text-[28px] font-bold text-[#F5F5F5]">
-              A partir de R$ 6.000
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-[#888888]">
-              Do zero ao ar. Pesquisa do negócio, arquitetura de conversão, design de alto
-              impacto, desenvolvimento em código limpo, deploy em produção. Otimizado para
-              Google Maps, bio do Instagram e qualquer canal onde seu cliente te encontra.
-            </p>
-            <ul className={listClass}>
-              <li>✦ Análise completa do negócio</li>
-              <li>✦ Design system exclusivo</li>
-              <li>✦ Código próprio (sem construtores)</li>
-              <li>✦ Domínio e hospedagem configurados</li>
-              <li>✦ Analytics instalado</li>
-              <li>✦ Treinamento de uso</li>
-            </ul>
-            <div className="mt-8">
-              <ParvusButton href={whatsappHref("Solicitar proposta")} variant="primary">
-                Solicitar proposta
-              </ParvusButton>
-            </div>
-          </ServiceCard>
-
-          <ServiceCard index={1}>
-            <ParvusBadge className="mb-4">Recorrente</ParvusBadge>
-            <h3 className="font-geist text-xl font-semibold text-[#F5F5F5]">
-              Manutenção Mensal
-            </h3>
-            <p className="mt-4 font-geist text-[28px] font-bold text-[#F5F5F5]">
-              R$ 500/mês
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-[#888888]">
-              Seu site precisa evoluir junto com seu negócio. A manutenção garante que o
-              instrumento continue funcionando no pico.
-            </p>
-            <ul className={listClass}>
-              <li>✦ Atualizações de conteúdo</li>
-              <li>✦ Monitoramento de performance</li>
-              <li>✦ Relatório mensal de métricas</li>
-              <li>✦ Suporte via WhatsApp</li>
-              <li>✦ Banners para redes sociais</li>
-              <li>✦ Backups semanais</li>
-            </ul>
-          </ServiceCard>
-
-          <ServiceCard index={2}>
-            <ParvusBadge className="mb-4">Incluso em todos</ParvusBadge>
-            <h3 className="font-geist text-xl font-semibold text-[#F5F5F5]">
-              Identidade Digital
-            </h3>
-            <p className="mt-4 text-lg text-[#888888]">Sem custo adicional</p>
-            <p className="mt-4 text-sm leading-relaxed text-[#888888]">
-              Presença coerente em todos os canais. O site é o centro — mas o Google Maps,
-              o Instagram e o WhatsApp Business precisam reforçar a mesma mensagem.
-            </p>
-            <ul className={listClass}>
-              <li>✦ Otimização no Google Maps</li>
-              <li>✦ Bio do Instagram configurada</li>
-              <li>✦ Padronização visual dos canais</li>
-              <li>✦ WhatsApp Business ativo</li>
-            </ul>
-          </ServiceCard>
+        {/* Cards Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {services.map((service, index) => (
+            <ServiceCard key={service.title} service={service} index={index} />
+          ))}
         </div>
+
+        {/* Note */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-12 text-center text-sm text-[#555]"
+        >
+          Todos os projetos incluem reunião de briefing, pesquisa de mercado e 
+          suporte pós-entrega.
+        </motion.p>
       </div>
     </section>
   )

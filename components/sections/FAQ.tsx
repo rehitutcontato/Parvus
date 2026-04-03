@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "@/components/framer/motion-elements"
 import { Overline } from "@/components/ui/Overline"
 
 const faqs = [
@@ -39,60 +39,89 @@ const faqs = [
   },
 ]
 
+function FAQItem({
+  item,
+  isOpen,
+  onClick,
+  index,
+}: {
+  item: typeof faqs[0]
+  isOpen: boolean
+  onClick: () => void
+  index: number
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      className="border-b border-[#1E1E1E]"
+    >
+      <button
+        type="button"
+        className="group flex w-full items-start justify-between gap-4 py-5 text-left"
+        onClick={onClick}
+        aria-expanded={isOpen}
+      >
+        <span className="font-geist text-base font-medium text-[#F5F5F5] transition-colors group-hover:text-white">
+          {item.q}
+        </span>
+        <span
+          className="mt-0.5 text-xl text-[#555] transition-all duration-200 group-hover:text-[#888]"
+          style={{ transform: isOpen ? "rotate(45deg)" : "rotate(0deg)" }}
+        >
+          +
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <p className="pb-5 text-sm leading-relaxed text-[#888]">
+              {item.a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="scroll-mt-24 px-5 py-24 md:px-8">
+    <section id="faq" className="scroll-mt-24 px-5 py-24 md:px-8 lg:py-32">
       <div className="mx-auto max-w-3xl">
-        <Overline>Dúvidas frequentes</Overline>
-        <h2 className="mt-3 font-geist text-[clamp(32px,4vw,48px)] font-bold text-[#F5F5F5]">
-          Se você está pensando — alguém já perguntou.
-        </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-12"
+        >
+          <Overline>Dúvidas frequentes</Overline>
+          <h2 className="mt-3 font-geist text-[clamp(32px,4vw,48px)] font-bold leading-tight text-[#F5F5F5]">
+            Se você está pensando — alguém já perguntou.
+          </h2>
+        </motion.div>
 
-        <div className="mt-12 space-y-2">
-          {faqs.map((item, i) => {
-            const isOpen = open === i
-            return (
-              <div
-                key={item.q}
-                className="border-b border-[#1E1E1E] py-2"
-              >
-                <button
-                  type="button"
-                  className="flex w-full items-start justify-between gap-4 py-4 text-left"
-                  onClick={() => setOpen(isOpen ? null : i)}
-                  data-hover
-                  aria-expanded={isOpen}
-                >
-                  <span className="font-geist text-lg font-medium text-[#F5F5F5]">
-                    {item.q}
-                  </span>
-                  <span
-                    className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center text-2xl leading-none text-[#888888] transition-transform duration-200"
-                    style={{ transform: isOpen ? "rotate(45deg)" : "rotate(0deg)" }}
-                  >
-                    +
-                  </span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <p className="pb-6 pr-10 text-sm leading-relaxed text-[#888888]">
-                        {item.a}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )
-          })}
+        <div>
+          {faqs.map((item, i) => (
+            <FAQItem
+              key={item.q}
+              item={item}
+              isOpen={open === i}
+              onClick={() => setOpen(open === i ? null : i)}
+              index={i}
+            />
+          ))}
         </div>
       </div>
     </section>

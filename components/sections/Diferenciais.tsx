@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, type MouseEvent } from "react"
-import { motion } from "framer-motion"
+import { motion } from "@/components/framer/motion-elements"
 import { Overline } from "@/components/ui/Overline"
 import { ParvusBadge } from "@/components/ui/ParvusBadge"
 

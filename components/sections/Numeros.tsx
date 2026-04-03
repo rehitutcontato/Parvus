@@ -1,6 +1,6 @@
 "use client"
 
-import { useInView } from "framer-motion"
+import { useInView } from "@/components/framer/motion-elements"
 import { useRef } from "react"
 import { Overline } from "@/components/ui/Overline"
 import { useCounter } from "@/hooks/useCounter"

@@ -13,9 +13,8 @@ export function Entropy({ className = "", size = 400 }: EntropyProps) {
     const canvas = canvasRef.current
     if (!canvas) return
     
-    const ctx = canvas.getContext("2d")
+    const ctx = canvas.getContext('2d')
     if (!ctx) return
-    const c = ctx
 
     // 基础设置
     const dpr = window.devicePixelRatio || 1
@@ -23,7 +22,7 @@ export function Entropy({ className = "", size = 400 }: EntropyProps) {
     canvas.height = size * dpr
     canvas.style.width = `${size}px`
     canvas.style.height = `${size}px`
-    c.scale(dpr, dpr)
+    ctx.scale(dpr, dpr)
 
     // 使用黑色主题
     const particleColor = '#ffffff'
@@ -135,7 +134,7 @@ export function Entropy({ className = "", size = 400 }: EntropyProps) {
     let animationId: number
     
     function animate() {
-      c.clearRect(0, 0, size, size)
+      ctx.clearRect(0, 0, size, size)
 
       // 更新邻居关系
       if (time % 30 === 0) {
@@ -145,33 +144,33 @@ export function Entropy({ className = "", size = 400 }: EntropyProps) {
       // 更新和绘制所有粒子
       particles.forEach(particle => {
         particle.update()
-        particle.draw(c)
+        particle.draw(ctx)
 
         // 绘制连接线
         particle.neighbors.forEach(neighbor => {
           const distance = Math.hypot(particle.x - neighbor.x, particle.y - neighbor.y)
           if (distance < 50) {
             const alpha = 0.2 * (1 - distance / 50)
-            c.strokeStyle = `${particleColor}${Math.round(alpha * 255).toString(16).padStart(2, '0')}`
-            c.beginPath()
-            c.moveTo(particle.x, particle.y)
-            c.lineTo(neighbor.x, neighbor.y)
-            c.stroke()
+            ctx.strokeStyle = `${particleColor}${Math.round(alpha * 255).toString(16).padStart(2, '0')}`
+            ctx.beginPath()
+            ctx.moveTo(particle.x, particle.y)
+            ctx.lineTo(neighbor.x, neighbor.y)
+            ctx.stroke()
           }
         })
       })
 
       // 添加分隔线和文字
-      c.strokeStyle = `${particleColor}4D`
-      c.lineWidth = 0.5
-      c.beginPath()
-      c.moveTo(size / 2, 0)
-      c.lineTo(size / 2, size)
-      c.stroke()
+      ctx.strokeStyle = `${particleColor}4D`
+      ctx.lineWidth = 0.5
+      ctx.beginPath()
+      ctx.moveTo(size / 2, 0)
+      ctx.lineTo(size / 2, size)
+      ctx.stroke()
 
-      c.font = '12px monospace'
-      c.fillStyle = '#ffffff'
-      c.textAlign = 'center'
+      ctx.font = '12px monospace'
+      ctx.fillStyle = '#ffffff'
+      ctx.textAlign = 'center'
 
       time++
       animationId = requestAnimationFrame(animate)
