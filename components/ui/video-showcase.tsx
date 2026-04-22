@@ -17,7 +17,7 @@ interface VideoShowcaseProps {
 export const VideoShowcase = ({
   mediaSrc,
   posterSrc,
-  bgImageSrc: _bgImageSrc, // Deprecated - fundo agora é Waves interativo
+  // bgImageSrc removido - usando Waves interativo agora
   title,
   subtitle,
   children,
