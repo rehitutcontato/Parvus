@@ -1,14 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { Overline } from "@/components/ui/Overline";
+import { Waves } from "@/components/ui/wave-background";
 
 interface VideoShowcaseProps {
   mediaSrc: string;
   posterSrc?: string;
-  bgImageSrc: string;
+  bgImageSrc?: string; // Deprecated - usando Waves agora
   title: string;
   subtitle: string;
   children?: React.ReactNode;
@@ -30,16 +30,17 @@ export const VideoShowcase = ({
       ref={ref}
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
-      {/* Background Image com Parallax Suave */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={bgImageSrc}
-          alt="Background"
-          fill
-          className="object-cover scale-110"
-          priority
+      {/* Fundo Interativo de Ondas */}
+      <div className="absolute inset-0 z-0 bg-[#080808]">
+        <Waves 
+          strokeColor="rgba(6, 182, 212, 0.4)" 
+          backgroundColor="#080808"
+          pointerSize={0.3}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+        {/* Gradient overlay para melhor legibilidade */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
+        {/* Radial glow no centro */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(6,182,212,0.15)_0%,_transparent_70%)]" />
       </div>
 
       {/* Conteúdo Principal */}
