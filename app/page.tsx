@@ -8,11 +8,11 @@ import { Diferenciais } from "@/components/sections/Diferenciais"
 import { Numeros } from "@/components/sections/Numeros"
 import { Servicos } from "@/components/sections/Servicos"
 import { Processo } from "@/components/sections/Processo"
-import { Cases } from "@/components/sections/Cases"
 import { AntesDepois } from "@/components/sections/AntesDepois"
 import { Sobre } from "@/components/sections/Sobre"
 import { FAQ } from "@/components/sections/FAQ"
 import { CTAFinal } from "@/components/sections/CTAFinal"
+import { ParvusFinale } from "@/components/sections/ParvusFinale"
 import { Footer } from "@/components/sections/Footer"
 import { Analytics } from "@vercel/analytics/next"
 
@@ -30,11 +30,11 @@ export default function Home() {
       <Numeros />
       <Servicos />
       <Processo />
-      <Cases />
       <AntesDepois />
       <Sobre />
       <FAQ />
       <CTAFinal />
+      <ParvusFinale />
       <Footer />
     </main>
   )
