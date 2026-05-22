@@ -10,6 +10,7 @@ import { Servicos } from "@/components/sections/Servicos"
 import { Processo } from "@/components/sections/Processo"
 import { AntesDepois } from "@/components/sections/AntesDepois"
 import { Sobre } from "@/components/sections/Sobre"
+import { Automate } from "@/components/sections/Automate"
 import { FAQ } from "@/components/sections/FAQ"
 import { CTAFinal } from "@/components/sections/CTAFinal"
 import { ParvusFinale } from "@/components/sections/ParvusFinale"
@@ -32,6 +33,7 @@ export default function Home() {
       <Processo />
       <AntesDepois />
       <Sobre />
+      <Automate />
       <FAQ />
       <CTAFinal />
       <ParvusFinale />
